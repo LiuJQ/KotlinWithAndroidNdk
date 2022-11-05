@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">InMemoryStorage</string>
+    <string name="key">Key</string>
+    <string name="value">Value</string>
+    <string name="save">Save</string>
+    <string name="get">Get</string>
+    <string name="check">Check</string>
 
     <string-array name="types_array">
         <item>String</item>

@@ -9,35 +9,35 @@
 
 bool isEntryValid(JNIEnv* pEnv, StoreEntry* pEntry, StoreType pType)
 {
-    if(pEntry == NULL)
+    if(pEntry == nullptr)
     {
         throwNoKeyException(pEnv);
     }
 
-    return ((pEntry != NULL) && (pEntry->mType == pType));
+    return ((pEntry != nullptr) && (pEntry->mType == pType));
 }
 
 StoreEntry* findEntry(JNIEnv* pEnv, Store* pStore, jstring pKey)
 {
     StoreEntry* entry = pStore->mEntries;
     StoreEntry* endEntry = entry + pStore->mLength;
-    const char* tmpKey = pEnv->GetStringUTFChars(pKey, NULL);
+    const char* tmpKey = pEnv->GetStringUTFChars(pKey, nullptr);
     while ((entry < endEntry) && (strcmp(entry->mKey, tmpKey) != 0)) {
         ++entry;
     }
     pEnv->ReleaseStringUTFChars(pKey, tmpKey);
-    return (entry == endEntry) ? NULL : entry;
+    return (entry == endEntry) ? nullptr : entry;
 }
 
 StoreEntry* allocateEntry(JNIEnv* pEnv, Store* pStore, jstring pKey)
 {
     StoreEntry* entry = findEntry(pEnv, pStore, pKey);
-    if( entry !=  NULL) {
+    if( entry !=  nullptr) {
         releaseEntryValue(pEnv, entry);
     } else {
         entry = pStore->mEntries + pStore->mLength;
 
-        const char* tmpKey = pEnv->GetStringUTFChars(pKey, NULL);
+        const char* tmpKey = pEnv->GetStringUTFChars(pKey, nullptr);
         entry->mKey = new char[strlen(tmpKey) + 1];
         strcpy(entry->mKey, tmpKey);
         pEnv->ReleaseStringUTFChars(pKey, tmpKey);
@@ -56,12 +56,13 @@ void releaseEntryValue(JNIEnv* pEnv, StoreEntry* pEntry)
         case StoreType_Object:
             pEnv->DeleteGlobalRef(pEntry->mValue.mObject);
             break;
+        default: ;
     }
 }
 
 void throwNoKeyException(JNIEnv* pEnv) {
     jclass clazz = pEnv->FindClass("java/lang/IllegalArgumentException");
-    if (clazz != NULL) {
+    if (clazz != nullptr) {
         pEnv->ThrowNew(clazz, "Key does not exist.");
     }
     pEnv->DeleteLocalRef(clazz);
